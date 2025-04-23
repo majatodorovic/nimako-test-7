@@ -23,7 +23,14 @@ export const CartNoItems = () => {
             <ul className="mt-2">
               <li>
                 - Ukoliko Vam je potrebna pomoć u svakom trenutku nas možete
-                kontaktirati pozivom na broj call centra{" "}
+                kontaktirati na e-mail{" "}
+                <a
+                  href={`mailto:${process.env.EMAIL}`}
+                  style={{ textDecoration: "underline" }}
+                >
+                  {process.env.EMAIL}
+                </a>{" "}
+                ili pozivom na broj telefona{" "}
                 <a href={`tel:${process.env.TELEPHONE}`}>
                   {process.env.TELEPHONE}
                 </a>

@@ -16,7 +16,7 @@ const ProductDetailsPage = ({
   badge,
   specification,
   productsDesc,
-  relatedProducts,
+  relatedProductss,
   tehnicalDoc,
   breadcrumbs,
   canonical,
