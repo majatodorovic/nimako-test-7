@@ -25,7 +25,6 @@ export const PromoCode = () => {
   const { mutate: deletePromoCode, isSuccess: is_deleted } =
     useRemovePromoCode();
   const { data: opt } = usePromoCodeOptions();
-  console.log("opt", opt);
 
   const { data: codes_list, refetch: refetchList } = usePromoCodesList();
 
@@ -85,73 +84,64 @@ export const PromoCode = () => {
     }
   }, [codes_list, opt?.number_of_promo_codes]);
 
-
-    return (
-      <div className={`bg-[#f7f7f7] w-full p-2`}>
-        <h4 className={`pb-4 text-[0.965rem] font-light uppercase underline`}>
-          Unesite promo kod
-        </h4>
-        <div className={`flex items-center gap-2`}>
-          <input
-            disabled={
-              opt?.number_of_promo_codes === 1 && codes_list?.length === 1
+  return (
+    <div className={`bg-[#f7f7f7] w-full p-2`}>
+      <h4 className={`pb-4 text-[0.965rem] font-light uppercase underline`}>
+        Unesite promo kod
+      </h4>
+      <div className={`flex items-center gap-2`}>
+        <input
+          disabled={
+            opt?.number_of_promo_codes === 1 && codes_list?.length === 1
+          }
+          value={promoCode}
+          onChange={(e) => setPromoCode(e.target.value)}
+          type={`text`}
+          className={`w-full border border-[#747579] bg-white py-2 px-3 font-light transition-all duration-500 hover:border-[#747579] hover:bg-white hover:text-black`}
+          placeholder={`Unesite promo kod`}
+        />
+        <button
+          disabled={isPending || promoCode?.length === 0}
+          onClick={() => {
+            if (opt?.number_of_promo_codes === 1 && codes_list?.length === 1) {
+              handlePromoCode("remove");
+            } else {
+              handlePromoCode("add");
             }
-            value={promoCode}
-            onChange={(e) => setPromoCode(e.target.value)}
-            type={`text`}
-            className={`w-full border border-[#747579] bg-white py-2 px-3 font-light transition-all duration-500 hover:border-[#747579] hover:bg-white hover:text-black`}
-            placeholder={`Unesite promo kod`}
-          />
-          <button
-            disabled={isPending || promoCode?.length === 0}
-            onClick={() => {
-              if (
-                opt?.number_of_promo_codes === 1 &&
-                codes_list?.length === 1
-              ) {
-                handlePromoCode("remove");
-              } else {
-                handlePromoCode("add");
-              }
-            }}
-            className={`px-5 disabled:bg-black/60 text-center uppercase text-white border border-[#747579] bg-black py-2 font-light transition-all duration-500 hover:border-[#747579] self-stretch hover:bg-white hover:text-black`}
-          >
-            {buttonText}
-          </button>
-        </div>
-        <div className={`flex flex-col gap-2 my-3`}>
-          {codes_list?.length > 0 &&
-            opt?.number_of_promo_codes > 1 &&
-            codes_list?.map(
-              ({
-                code,
-                id_promo_code: id,
-                campaign_data: { calculations },
-              }) => {
-                let currency =
-                  calculations?.[0]?.currency === "percentage"
-                    ? "%"
-                    : calculations?.[0]?.currency;
-                let amount = calculations?.[0]?.discount_value;
-
-                return (
-                  <div className={`flex items-center justify-between`}>
-                    <p className={`text-[0.965rem] font-medium uppercase`}>
-                      {code} (-{amount}
-                      {currency})
-                    </p>
-                    <button
-                      onClick={() => deletePromoCode({ id_promo_code: id })}
-                      className={`text-[0.965rem] font-light underline`}
-                    >
-                      Ukloni
-                    </button>
-                  </div>
-                );
-              }
-            )}
-        </div>
+          }}
+          className={`px-5 disabled:bg-black/60 text-center uppercase text-white border border-[#747579] bg-black py-2 font-light transition-all duration-500 hover:border-[#747579] self-stretch hover:bg-white hover:text-black`}
+        >
+          {buttonText}
+        </button>
       </div>
-    );
-  }
+      <div className={`flex flex-col gap-2 my-3`}>
+        {codes_list?.length > 0 &&
+          opt?.number_of_promo_codes > 1 &&
+          codes_list?.map(
+            ({ code, id_promo_code: id, campaign_data: { calculations } }) => {
+              let currency =
+                calculations?.[0]?.currency === "percentage"
+                  ? "%"
+                  : calculations?.[0]?.currency;
+              let amount = calculations?.[0]?.discount_value;
 
+              return (
+                <div className={`flex items-center justify-between`}>
+                  <p className={`text-[0.965rem] font-medium uppercase`}>
+                    {code} (-{amount}
+                    {currency})
+                  </p>
+                  <button
+                    onClick={() => deletePromoCode({ id_promo_code: id })}
+                    className={`text-[0.965rem] font-light underline`}
+                  >
+                    Ukloni
+                  </button>
+                </div>
+              );
+            }
+          )}
+      </div>
+    </div>
+  );
+};

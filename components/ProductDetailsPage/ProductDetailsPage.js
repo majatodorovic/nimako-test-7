@@ -5,7 +5,7 @@ import ThumbSlider from "../ThumbSlider/ThumbSlider";
 import Layout from "../../components/UI/Layout";
 import ItemInfo from "./ItemInfo";
 import Tabs from "./Tabs";
-import RelatedProductss from "../RelatedProductss.jsx/RelatedProductss";
+import RelatedProducts from "../RelatedProducts/RelatedProducts";
 import Link from "next/link";
 import UpsellProducts from "../UpSellProducts/UpSellProducts";
 import CrosssellProducts from "../CrosssellProducts/CrosssellProducts";
@@ -16,7 +16,7 @@ const ProductDetailsPage = ({
   badge,
   specification,
   productsDesc,
-  relatedProductss,
+  relatedProducts,
   tehnicalDoc,
   breadcrumbs,
   canonical,
@@ -80,8 +80,9 @@ const ProductDetailsPage = ({
           <CrosssellProducts id={products?.data?.item.id} />
         </div>
         <div className={`mt-5 px-2 md:px-[2rem]`}>
-          <RelatedProductss id={products?.data?.item.id} />
+          <RelatedProducts id={products?.data?.item.id} />
         </div>
+        <br />
       </Layout>
     </div>
   );

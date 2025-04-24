@@ -30,7 +30,7 @@ export const CartNoItems = () => {
                 >
                   {process.env.EMAIL}
                 </a>{" "}
-                ili pozivom na broj telefona{" "}
+                ili broj telefona{" "}
                 <a href={`tel:${process.env.TELEPHONE}`}>
                   {process.env.TELEPHONE}
                 </a>

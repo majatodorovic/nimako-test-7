@@ -30,11 +30,7 @@ const tehnicalDocList = async (id) => {
     (response) => response?.payload,
   );
 };
-const relatedProductsList = async () => {
-  return await list("/products/new-in/list").then(
-    (response) => response?.payload?.items,
-  );
-};
+
 
 const getProductDesc = async (id) => {
   return await get(`/product-details/description/${id}`).then(
@@ -56,7 +52,6 @@ const ProductPage = async ({ path, category_id }) => {
     badge,
     specification,
     productsDesc,
-    relatedProducts,
     technicalDoc,
     breadcrumbs,
   ] = await Promise.all([
@@ -65,7 +60,6 @@ const ProductPage = async ({ path, category_id }) => {
     getBadge(productId),
     getSpecification(productId),
     getProductDesc(productId),
-    relatedProductsList(),
     tehnicalDocList(productId),
     getProductBreadcrumbs(productId, category_id),
   ]);
@@ -80,7 +74,6 @@ const ProductPage = async ({ path, category_id }) => {
         specification={specification}
         products={product}
         productsDesc={productsDesc}
-        relatedProducts={relatedProducts}
         tehnicalDoc={technicalDoc}
         breadcrumbs={breadcrumbs}
         canonical={canonical}

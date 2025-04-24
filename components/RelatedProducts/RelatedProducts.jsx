@@ -8,7 +8,7 @@ import { ThumbSuspense } from "@/_components/thumb/thumb-suspense";
 import { useQuery } from "@tanstack/react-query";
 import { list } from "@/app/api/api";
 
-const RelatedProductss = ({ id }) => {
+const RelatedProducts = ({ id }) => {
   const { data: related_products = [], isLoading } = useQuery({
     queryKey: ["related-products", id],
     queryFn: async () => {
@@ -89,4 +89,4 @@ const RelatedProductss = ({ id }) => {
   }
 };
 
-export default RelatedProductss;
+export default RelatedProducts;

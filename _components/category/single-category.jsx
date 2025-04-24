@@ -38,7 +38,6 @@ export const SingleCategory = ({
     };
 
     if (singleCategory) {
-      console.log(singleCategory); // Ovdje logujete podatke
       generateBreadcrumbs(singleCategory);
     }
   }, [singleCategory, breadcrumbs]);
