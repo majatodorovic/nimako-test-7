@@ -30,7 +30,7 @@ const UpsellProducts = ({ id }) => {
       <div className="mb-6 mt-[3rem] overflow-visible max-md:col-span-4 max-sm:mx-auto max-sm:mt-[1.5rem] max-sm:w-[95%] md:mx-[0.2rem]">
         <div className="flex w-full items-center justify-between">
           <h5 className="text-[1.5rem] font-bold max-md:text-[1.1rem] ml-[4rem]">
-            Preporučujemo
+            Preporučeni proizvodi
           </h5>
         </div>
         <div className="mt-[2.5rem] max-sm:mt-[1rem]">
