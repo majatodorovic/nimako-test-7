@@ -205,7 +205,7 @@ const Thumb = ({ data, slider, loading }) => {
     const products = data?.map((product, index) => {
       // const [imageIndex, setImageIndex] = imageIndexes[index];
       return (
-        <div className="col-span-1 relative item border border-[#ecebe5] hover:border-[#d0cec8] transition-all ease p-2 md:p-5 rounded-md">
+        <div key={index} className="col-span-1 relative item border border-[#ecebe5] hover:border-[#d0cec8] transition-all ease p-2 md:p-5 rounded-md">
           <div
             className={`${classes.item} max-md:h-[240px] md:h-[280px] lg:h-[320px] item relative`}
           >

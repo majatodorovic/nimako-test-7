@@ -29,12 +29,20 @@ const NavigationMobile = () => {
   const pathname = usePathname();
   useEffect(() => {
     const getCategories = async () => {
-      const data = await get("/categories/product/tree").then((response) =>
-        setCategories(response?.payload),
-      );
+      get("/categories/product/tree").then((response) => {
+        setCategories(response?.payload);
+
+        // Postavljanje prve kategorije kao "selected" ili neki drugi način
+        if (response?.payload?.length > 0) {
+          setSelectedCategoryId(response.payload[0].id); // primer postavljanja ID prve kategorije
+          setSubcategory(true); // ako želiš da otvorite subkategorije odmah
+        }
+      });
     };
-    getCategories();
+
+    if (!categories || categories.length < 1) getCategories();
   }, []);
+
   // useEffect(() => {
   //   const disableBodyScroll = () => {
   //     isOpen && (document.body.style.overflow = "hidden");
@@ -71,20 +79,19 @@ const NavigationMobile = () => {
   }, [getCartCount, cart]);
 
   useEffect(() => {
-  if (isOpen) {
-    document.documentElement.style.overflow = 'hidden';  // Applies to html
-    document.body.style.overflow = 'hidden';              // Applies to body
-  } else {
-    document.documentElement.style.overflow = 'auto';
-    document.body.style.overflow = 'auto';
-  }
+    if (isOpen) {
+      document.documentElement.style.overflow = "hidden"; // Applies to html
+      document.body.style.overflow = "hidden"; // Applies to body
+    } else {
+      document.documentElement.style.overflow = "auto";
+      document.body.style.overflow = "auto";
+    }
 
-  return () => {
-    document.documentElement.style.overflow = 'auto';
-    document.body.style.overflow = 'auto';
-  };
-}, [isOpen]);
-
+    return () => {
+      document.documentElement.style.overflow = "auto";
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
 
   const handleCategoryClick = (categoryId) => {
     if (selectedCategoryId === categoryId) {
@@ -96,7 +103,6 @@ const NavigationMobile = () => {
       setSubcategory(true); // Show children when a category is selected
     }
   };
-
 
   const { push: navigate, asPath } = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
@@ -220,6 +226,7 @@ const NavigationMobile = () => {
                     ? searchData?.items?.slice(0, 6).map((item) => (
                         <Link
                           href={`/${item?.link?.link_path}`}
+                          key={item?.link?.link_path}
                           className="h-[83px]"
                           onClick={() => {
                             setSearchTerm("");
@@ -305,7 +312,7 @@ const NavigationMobile = () => {
               {item.children ? (
                 <>
                   <div
-                    key={item.id}
+                    key={item.id + index}
                     className={`p-3 flex items-center justify-between ${
                       index % 2 === 0 ? "bg-croonus-3 text-white" : ""
                     }`}
@@ -326,11 +333,11 @@ const NavigationMobile = () => {
                 <Link
                   href={`/${item?.link?.link_path}`}
                   className="uppercase font-medium"
-                  key={item?.id}
+                  key={item?.id + index}
                   onClick={() => setIsOpen(false)}
                 >
                   <div
-                    key={item.id}
+                    key={item.id + index}
                     className={`p-3 flex items-center justify-between ${
                       index % 2 === 0 ? "bg-croonus-3 text-white" : ""
                     }`}
@@ -344,7 +351,7 @@ const NavigationMobile = () => {
                     </p>
                     {item.children ? (
                       <i
-                        key={item?.id}
+                        key={item?.id + index}
                         className="fa-solid fa-chevron-right text-sm"
                       ></i>
                     ) : null}
@@ -354,25 +361,25 @@ const NavigationMobile = () => {
 
               {subcategory && item?.children
                 ? item?.children?.map((child) => {
-                  if(child.parent_id == selectedCategoryId) {
-                    return (
-                      <Link
-                        href={`/${child?.link?.link_path}`}
-                        onClick={() => {
-                          setIsOpen(false);
-                          setSubcategory(false);
-                        }}
-                        className={
-                          subcategory && item?.children
-                            ? `p-3 pl-10 translate-x-0 duration-500 transition-all uppercase font-medium text-sm`
-                            : `p-3 pl-10 =translate-x-full duration-500 transition-all uppercase font-medium text-sm`
-                        }
-                        key={child?.id}
-                      >
-                        {child?.name}
-                      </Link>
-                    );
-                  }
+                    if (child.parent_id == selectedCategoryId) {
+                      return (
+                        <Link
+                          href={`/${child?.link?.link_path}`}
+                          onClick={() => {
+                            setIsOpen(false);
+                            setSubcategory(false);
+                          }}
+                          className={
+                            subcategory && item?.children
+                              ? `p-3 pl-10 translate-x-0 duration-500 transition-all uppercase font-medium text-sm`
+                              : `p-3 pl-10 =translate-x-full duration-500 transition-all uppercase font-medium text-sm`
+                          }
+                          key={child?.id}
+                        >
+                          {child?.name}
+                        </Link>
+                      );
+                    }
                   })
                 : null}
             </>

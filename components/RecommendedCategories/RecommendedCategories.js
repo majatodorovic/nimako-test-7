@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import Translated from "../../context/state";
 
 const RecommendedCategories = ({ recommendedBanners }) => {
   return (

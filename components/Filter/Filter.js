@@ -38,7 +38,7 @@ const Filter = ({
   };
 
   let selected = tempSelectedFilters.filter(
-    (item) => item.column === filter.key,
+    (item) => item.column === filter.key
   )[0];
   selected = selected ? selected.value.selected : [];
 
@@ -106,36 +106,34 @@ const FilterIn = ({
   return (
     <>
       {(filter?.params?.items ?? []).map((item) => (
-        <>
-          <div
-            key={item.id}
-            className="mt-2 flex flex-row items-center gap-2 pl-4 text-[0.775rem]"
+        <div
+          key={item.id}
+          className="mt-2 flex flex-row items-center gap-2 pl-4 text-[0.775rem]"
+        >
+          <input
+            type="checkbox"
+            className="h-4 w-4 rounded-sm bg-croonus-1  text-croonus-3 focus:ring-0"
+            name={item.label}
+            checked={selected.includes(
+              filter?.params?.use_field
+                ? item[filter?.params?.use_field]
+                : item.key
+            )}
+            onChange={checkedChanged}
+            value={
+              filter?.params?.use_field
+                ? item[filter?.params?.use_field]
+                : item.key
+            }
+            id={"chbx-" + item.id}
+          />
+          <label
+            className="text-[0.875rem] leading-[1.625rem]"
+            htmlFor={"chbx-" + item.id}
           >
-            <input
-              type="checkbox"
-              className="h-4 w-4 rounded-sm bg-croonus-1  text-croonus-3 focus:ring-0"
-              name={item.label}
-              checked={selected.includes(
-                filter?.params?.use_field
-                  ? item[filter?.params?.use_field]
-                  : item.key,
-              )}
-              onChange={checkedChanged}
-              value={
-                filter?.params?.use_field
-                  ? item[filter?.params?.use_field]
-                  : item.key
-              }
-              id={"chbx-" + item.id}
-            />
-            <label
-              className="text-[0.875rem] leading-[1.625rem]"
-              htmlFor={"chbx-" + item.id}
-            >
-              {item.label}
-            </label>
-          </div>
-        </>
+            {item.label}
+          </label>
+        </div>
       ))}
     </>
   );
@@ -145,7 +143,7 @@ const FilterRange = ({ filter, onChange, selected }) => {
   const [selectedValue, setSelectedValue] = useState(
     selected.length === 2
       ? selected
-      : [Number(filter.params.min), Number(filter.params.max)],
+      : [Number(filter.params.min), Number(filter.params.max)]
   );
   const onRangeChange = (data) => {
     onChange({

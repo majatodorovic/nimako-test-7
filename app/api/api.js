@@ -25,8 +25,38 @@ const getCustomerToken = () => {
 };
 
 const makeRequest = async (method, path, payload, token) => {
-  let device_token = getDeviceToken();
-  let customer_token = getCustomerToken();
+  let device_token, customer_token, refererUrl;
+
+  /**
+   * Checking whether the request is sent from the client or server component,
+   * and based on that, the refererUrl is created
+   */
+  if (typeof window !== "undefined") {
+    device_token = getDeviceToken();
+    customer_token = getCustomerToken();
+    refererUrl = window.location.href;
+  } else {
+    const { cookies, headers } = await import("next/headers");
+    device_token =
+      cookies().get("device_token")?.value || generateDeviceToken();
+    customer_token = cookies().get("customer_token")?.value || device_token;
+    const headersList = headers();
+    const pathname = headersList.get("x-pathname") || "/";
+    if (pathname.match(/\.(css|js|map|mjs|json)$/)) refererUrl = null;
+    refererUrl = pathname;
+  }
+
+  /**
+   * Based on whether we are in test mode, the referer url is updated
+   */
+  if (process.env.NEXT_PUBLIC_URL_STRUCTURE_MODE === "test") {
+    if (refererUrl.startsWith("http")) {
+      refererUrl = new URL(refererUrl).pathname;
+    }
+    if (refererUrl.startsWith("/")) {
+      refererUrl = refererUrl.slice(1);
+    }
+  }
 
   try {
     const response = await axios({
@@ -35,6 +65,7 @@ const makeRequest = async (method, path, payload, token) => {
       headers: {
         "device-token": device_token,
         "customer-token": token ?? customer_token,
+        "referer-url": refererUrl,
       },
       data: payload,
       cache: "no-store",

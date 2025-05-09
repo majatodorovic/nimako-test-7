@@ -1,6 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
-import GenerateBreadCrumbsServer from "@/helpers/generateBreadCrumbsServer";
 import ThumbSlider from "../ThumbSlider/ThumbSlider";
 import Layout from "../../components/UI/Layout";
 import ItemInfo from "./ItemInfo";
@@ -16,12 +14,11 @@ const ProductDetailsPage = ({
   badge,
   specification,
   productsDesc,
-  relatedProducts,
   tehnicalDoc,
   breadcrumbs,
   canonical,
 }) => {
-  console.log("Products", products);
+
   return (
     <div className="">
       <div className="bg-croonus-3 md:p-5 max-md:py-2">
@@ -62,7 +59,7 @@ const ProductDetailsPage = ({
         <div className="max-md:mt-[1rem] mt-[5rem] max-md:w-[95%] max-md:mx-auto mx-[5rem] gap-x-[4.063rem] md:grid md:grid-cols-4 max-md:mb-[2rem] mb-[5rem]">
           <ThumbSlider gallery={gallery} className="grid-row-span-4" />
           <div className="flex col-span-2">
-            <ItemInfo product={products} badge={badge} canonical={canonical} />
+            <ItemInfo product={products} badge={badge} canonical={canonical} gallery={gallery}/>
           </div>
         </div>
         <div className="col-span-2">

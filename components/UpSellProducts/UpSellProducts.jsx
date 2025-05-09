@@ -7,7 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import { list } from "@/app/api/api";
 
 const UpsellProducts = ({ id }) => {
-  console.log("Product ID:", id); // Koristi id koji je prosleđen kao prop
 
   const { data: up_sell_products = [], isLoading } = useQuery({
     queryKey: ["up-sell-products", id],

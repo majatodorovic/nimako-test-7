@@ -24,7 +24,7 @@ import {
 } from "@/hooks/nimaco.hooks";
 import { generateProductSchema } from "@/_functions";
 
-const ItemInfo = ({ product, badge, canonical }) => {
+const ItemInfo = ({ product, badge, canonical, gallery }) => {
   const [loadingCart, setLoadingCart] = useState(false);
   const [loadingWishlist, setLoadingWishlist] = useState(false);
   const [productVariant, setProductVariant] = useState(null);
@@ -67,7 +67,7 @@ const ItemInfo = ({ product, badge, canonical }) => {
         `Proizvod ${product.data.item.basic_data?.name} dodat u korpu!`,
         {
           position: toast.POSITION.TOP_CENTER,
-        },
+        }
       );
     } else {
       if (productVariant === null || productVariant?.length === 0) {
@@ -84,7 +84,7 @@ const ItemInfo = ({ product, badge, canonical }) => {
           `Proizvod ${productVariant?.basic_data?.name} dodat u korpu!`,
           {
             position: toast.POSITION.TOP_CENTER,
-          },
+          }
         );
       }
     }
@@ -138,7 +138,7 @@ const ItemInfo = ({ product, badge, canonical }) => {
     setPrice(price);
   };
 
-  const product_schema = generateProductSchema(product, [], canonical);
+  const product_schema = generateProductSchema(product, gallery, canonical);
 
   return (
     <>
@@ -205,7 +205,7 @@ const ItemInfo = ({ product, badge, canonical }) => {
                     {product?.data?.item?.price?.discount?.active && (
                       <span className={` line-through text-[14px] font-normal`}>
                         {currencyFormat(
-                          product?.data?.item?.price?.price?.original,
+                          product?.data?.item?.price?.price?.original
                         )}
                       </span>
                     )}
@@ -280,7 +280,7 @@ const ItemInfo = ({ product, badge, canonical }) => {
                     productVariant
                       ? router?.push(`/kontakt?slug=${productVariant?.slug}`)
                       : router?.push(
-                          `/kontakt?slug=${product?.data?.item?.slug}`,
+                          `/kontakt?slug=${product?.data?.item?.slug}`
                         );
                   }}
                 >

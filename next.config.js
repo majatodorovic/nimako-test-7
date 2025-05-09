@@ -30,6 +30,18 @@ const nextConfig = {
     domains: ["api.nimaco.croonus.com", "192.168.1.223"],
     minimumCacheTTL: 60 * 60 * 12 * 90,
   },
+  async rewrites() {
+    return [
+      {
+        source: "/robots.txt",
+        destination: "/api/robots",
+      },
+      {
+        source: "/sitemap/:path*",
+        destination: "/api/sitemap",
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
