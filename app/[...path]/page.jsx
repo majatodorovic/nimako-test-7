@@ -3,8 +3,8 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { headers } from "next/headers";
 import { convertHttpToHttps } from "@/helpers/convertHttpToHttps";
 import { getRobots, handleCategoryRobots } from "@/_functions";
-import CategoryPage from "@/app/kategorije/[...path]/page";
-import ProductPage from "@/app/proizvod/[...path]/page";
+import CategoryPage from "@/_components/category/Category";
+import ProductPage from "@/_components/products/Product";
 
 const getBodyForHandleData = () => {
   const headersList = headers();

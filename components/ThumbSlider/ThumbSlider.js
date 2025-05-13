@@ -67,8 +67,21 @@ const ProductGallery = ({ gallery }) => {
     </SwiperSlide>
   ));
 
+  const modalImage = gallery?.map((image, index) => (
+    <SwiperSlide key={index}>
+      <div className="w-[90vw] h-[90vh] relative">
+        <Image
+          src={image?.image}
+          alt="Nimaco"
+          fill
+          style={{ objectFit: "contain" }}
+        />
+      </div>
+    </SwiperSlide>
+  ));
+
   return (
-    <div className="col-span-2 max-md:col-span-4  md:flex md:flex-row-reverse gap-5 md:max-h-[380px] lg:max-h-[550px] xl:max-h-[680px] 2xl:max-h-[720px] 3xl:max-h-[700px]">
+    <div className="col-span-2 max-md:col-span-4 md:flex md:flex-row-reverse gap-5 md:max-h-[380px] lg:max-h-[550px] xl:max-h-[680px] 2xl:max-h-[720px] 3xl:max-h-[700px]">
       <Swiper
         ref={swiperRef}
         spaceBetween={10}
@@ -146,9 +159,9 @@ const ProductGallery = ({ gallery }) => {
                 navigation={true}
                 className="mySwiper3 relative select-none"
               >
-                {productImage}
+                {modalImage}
                 <i
-                  className="absolute z-[10000] top-2 right-2 fa-solid fa-times text-xl cursor-pointer hover:text-red-500"
+                  className="absolute z-[10000] top-2 right-8 fa-solid fa-times text-xl cursor-pointer hover:text-red-500"
                   onClick={() => setModal(false)}
                 ></i>
               </Swiper>

@@ -1,6 +1,5 @@
 import { get, list } from "@/app/api/api";
 import ProductDetailsPage from "@/components/ProductDetailsPage/ProductDetailsPage";
-import { headers } from "next/headers";
 
 const getProduct = async (id) => {
   return await get(`/product-details/basic-data/${id}`).then(
