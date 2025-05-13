@@ -1,6 +1,13 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Autoplay, FreeMode, Pagination, Thumbs, Navigation } from "swiper";
+import {
+  Autoplay,
+  FreeMode,
+  Pagination,
+  Thumbs,
+  Navigation,
+  Zoom,
+} from "swiper";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
@@ -9,22 +16,20 @@ import "swiper/css/free-mode";
 import "swiper/css/thumbs";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import "swiper/css/zoom"; // DODATO
 import classes from "./styles.module.css";
 
 const ProductGallery = ({ gallery }) => {
   const [navigationEnabled, setNavigationEnabled] = useState(true);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [modal, setModal] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0); // NOVO
   const swiperRef = useRef(null);
   const swiperModalRef = useRef(null);
 
   useEffect(() => {
-    if (gallery?.length >= 4) {
-      setNavigationEnabled(true);
-    } else {
-      setNavigationEnabled(false);
-    }
-  }, [gallery?.length, navigationEnabled]);
+    setNavigationEnabled(gallery?.length >= 4);
+  }, [gallery?.length]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -44,13 +49,17 @@ const ProductGallery = ({ gallery }) => {
     };
 
     document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [modal]);
 
   const productImage = gallery?.map((image, index) => (
-    <SwiperSlide key={index} onClick={() => setModal(true)}>
+    <SwiperSlide
+      key={index}
+      onClick={() => {
+        setActiveIndex(index); // POSTAVLJAMO TRENUTNI INDEKS
+        setModal(true);
+      }}
+    >
       <Image src={image?.image} width={2000} height={2000} alt="Nimaco" />
     </SwiperSlide>
   ));
@@ -69,7 +78,7 @@ const ProductGallery = ({ gallery }) => {
 
   const modalImage = gallery?.map((image, index) => (
     <SwiperSlide key={index}>
-      <div className="w-[90vw] h-[90vh] relative">
+      <div className="swiper-zoom-container w-[90vw] h-[90vh] relative">
         <Image
           src={image?.image}
           alt="Nimaco"
@@ -116,6 +125,7 @@ const ProductGallery = ({ gallery }) => {
       >
         {productImage}
       </Swiper>
+
       <Swiper
         onSwiper={setThumbsSwiper}
         spaceBetween={10}
@@ -136,7 +146,7 @@ const ProductGallery = ({ gallery }) => {
             enabled: true,
             modules: [FreeMode, Thumbs, Navigation],
             navigation: {
-              enabled: gallery?.length > 4.3 ? true : false,
+              enabled: gallery?.length > 4.3,
             },
           },
         }}
@@ -146,6 +156,7 @@ const ProductGallery = ({ gallery }) => {
       >
         {thumbImage}
       </Swiper>
+
       {modal && (
         <>
           <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 z-[1000]"></div>
@@ -155,8 +166,10 @@ const ProductGallery = ({ gallery }) => {
                 ref={swiperModalRef}
                 spaceBetween={10}
                 slidesPerView={1}
-                modules={[Navigation]}
+                zoom={true}
+                modules={[Navigation, Zoom]}
                 navigation={true}
+                initialSlide={activeIndex} // KLJUČNA LINIJA
                 className="mySwiper3 relative select-none"
               >
                 {modalImage}
