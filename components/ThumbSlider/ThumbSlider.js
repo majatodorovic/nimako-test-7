@@ -16,14 +16,14 @@ import "swiper/css/free-mode";
 import "swiper/css/thumbs";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import "swiper/css/zoom"; // DODATO
+import "swiper/css/zoom";
 import classes from "./styles.module.css";
 
 const ProductGallery = ({ gallery }) => {
   const [navigationEnabled, setNavigationEnabled] = useState(true);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [modal, setModal] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0); // NOVO
+  const [activeIndex, setActiveIndex] = useState(0);
   const swiperRef = useRef(null);
   const swiperModalRef = useRef(null);
 
@@ -52,11 +52,34 @@ const ProductGallery = ({ gallery }) => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [modal]);
 
+  // ✅ BLOKIRANJE SCROLLA KADA JE MODAL AKTIVAN
+  useEffect(() => {
+    if (modal) {
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.overflow = "hidden";
+      document.body.style.width = "100%";
+
+      return () => {
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+        document.body.style.overflow = "";
+        document.body.style.width = "";
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [modal]);
+
   const productImage = gallery?.map((image, index) => (
     <SwiperSlide
       key={index}
       onClick={() => {
-        setActiveIndex(index); // POSTAVLJAMO TRENUTNI INDEKS
+        setActiveIndex(index);
         setModal(true);
       }}
     >
@@ -169,7 +192,7 @@ const ProductGallery = ({ gallery }) => {
                 zoom={true}
                 modules={[Navigation, Zoom]}
                 navigation={true}
-                initialSlide={activeIndex} // KLJUČNA LINIJA
+                initialSlide={activeIndex}
                 className="mySwiper3 relative select-none"
               >
                 {modalImage}
