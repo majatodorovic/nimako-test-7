@@ -52,7 +52,7 @@ https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f)
 https://www.googletagmanager.com/ns.html?id=GTM-MVSB85CJ"
                     height="0"
                     width="0"
-                    style="display:none;visibility:hidden"
+                    style={{ display: "none", visibility: "hidden" }}
                   ></iframe>
                 </noscript>
 
