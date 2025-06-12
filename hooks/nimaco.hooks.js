@@ -333,7 +333,7 @@ export const useCategory = ({ slug }) => {
     queryKey: ["category", { slug: slug }],
     queryFn: async () => {
       return await GET(`/categories/product/single/${slug}`).then(
-        (res) => res?.payload,
+        (res) => res?.payload
       );
     },
     refetchOnWindowFocus: false,
@@ -380,13 +380,13 @@ export const useCategoryFilters = ({
         const filterLastSelectedFromResponse = response?.payload?.filter(
           (item) => {
             return item?.key !== lastSelectedFilterKey;
-          },
+          }
         );
 
         const indexOfLastSelectedFilter = availableFilters?.findIndex(
           (index) => {
             return index?.key === lastSelectedFilterKey;
-          },
+          }
         );
 
         if (
@@ -396,7 +396,7 @@ export const useCategoryFilters = ({
           setAvailableFilters([
             ...filterLastSelectedFromResponse.slice(
               0,
-              indexOfLastSelectedFilter,
+              indexOfLastSelectedFilter
             ),
             lastSelectedFilter,
             ...filterLastSelectedFromResponse.slice(indexOfLastSelectedFilter),
@@ -422,6 +422,8 @@ export const useCategoryProducts = ({
   setSort,
   render = true,
 }) => {
+  const queryClient = useQueryClient();
+
   return useSuspenseQuery({
     queryKey: [
       "categoryProducts",
@@ -436,7 +438,7 @@ export const useCategoryProducts = ({
     ],
     queryFn: async () => {
       try {
-        //vadimo filtere iz URL koji su prethodno selektovani i pushovani sa router.push()
+        // Parse filters from URL
         const selectedFilters_tmp = (filterKey ?? ",")
           ?.split(",")
           ?.map((filter) => {
@@ -452,14 +454,14 @@ export const useCategoryProducts = ({
             };
           });
 
-        //radimo isto za sort
+        // Parse sort
         const sort_tmp = (sort ?? "_")?.split("_");
         const sortObj = {
           field: sort_tmp[0],
           direction: sort_tmp[1],
         };
 
-        return await LIST(`/products/category/list/${slug}`, {
+        const response = await LIST(`/products/category/list/${slug}`, {
           page: page,
           limit: limit,
           sort: sortObj,
@@ -467,20 +469,45 @@ export const useCategoryProducts = ({
             ? selectedFilters_tmp
             : [],
           render: render,
-        }).then((res) => {
-          //na kraju setujemo state za filtere i sort, da znamo koji su selektovani
-          if (selectedFilters_tmp?.every((column) => column?.column !== "")) {
-            setSelectedFilters(selectedFilters_tmp);
-          }
-          setSort(sortObj);
-
-          return res?.payload;
         });
+
+        return response?.payload;
       } catch (error) {
         return error;
       }
     },
     refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      // Move state updates here
+      if (filterKey && setSelectedFilters) {
+        const selectedFilters_tmp = (filterKey ?? ",")
+          ?.split(",")
+          ?.map((filter) => {
+            const [column, selected] = filter?.split("=");
+            const selectedValues = selected?.split("_");
+            return {
+              column,
+              value: {
+                selected: column?.includes("cena")
+                  ? [Number(selectedValues[0]), Number(selectedValues[1])]
+                  : selectedValues,
+              },
+            };
+          });
+
+        if (selectedFilters_tmp?.every((column) => column?.column !== "")) {
+          setSelectedFilters(selectedFilters_tmp);
+        }
+      }
+
+      if (sort && setSort) {
+        const sort_tmp = (sort ?? "_")?.split("_");
+        setSort({
+          field: sort_tmp[0],
+          direction: sort_tmp[1],
+        });
+      }
+    },
   });
 };
 
@@ -502,7 +529,7 @@ export const useProductThumb = ({ slug, id, categoryId }) => {
     queryKey: ["productThumb", id ? id : null],
     queryFn: async () => {
       return await GET(
-        `/product-details/thumb/${slug}?categoryId=${categoryId}`,
+        `/product-details/thumb/${slug}?categoryId=${categoryId}`
       ).then((res) => {
         return res?.payload;
       });
@@ -614,7 +641,7 @@ export const useSummary = ({ items, formData }) => {
     queryKey: ["summary", { items, formData }],
     queryFn: async () => {
       return await FETCH(`/checkout/summary`, { ...formData }).then(
-        (res) => res?.payload,
+        (res) => res?.payload
       );
     },
     refetchOnWindowFocus: false,
@@ -627,7 +654,7 @@ export const useOrder = ({ order_token }) => {
     queryKey: ["order", { order_token: order_token }],
     queryFn: async () => {
       return await GET(`/checkout/info/${order_token}`).then(
-        (res) => res?.payload,
+        (res) => res?.payload
       );
     },
     refetchOnWindowFocus: false,
@@ -746,7 +773,7 @@ export const useRemovePromoCode = () => {
               });
               break;
           }
-        },
+        }
       );
     },
   });
@@ -871,7 +898,7 @@ export const useCreateAccount = () => {
               break;
           }
           return res;
-        },
+        }
       );
     },
   });
@@ -1118,7 +1145,6 @@ export const useIsLoggedIn = () => {
 export const useForm = (initialValues) => {
   const [data, setData] = useState(initialValues);
   const [errors, setErrors] = useState([]);
-
   return {
     data,
     setData,

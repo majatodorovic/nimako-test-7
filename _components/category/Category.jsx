@@ -28,7 +28,6 @@ const Category = ({
   });
 
   const base_url = headers()?.get("x-base_url");
-
   return (
     <>
       <Suspense

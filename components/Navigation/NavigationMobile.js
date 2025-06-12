@@ -3,7 +3,7 @@ import Image from "next/image";
 import Logo from "../../assets/Images/logo.png";
 import DarkLogo from "../../assets/Images/nimaco-logo-dark.png";
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Search from "../../assets/Icons/search.png";
 import Wishlist from "../../assets/Icons/heart.png";
@@ -18,7 +18,6 @@ import { useSearch } from "@/hooks/nimaco.hooks";
 
 const NavigationMobile = () => {
   const [isOpen, setIsOpen] = useState(false);
-
   const [search, setSearch] = useState("");
   const [searchIsOpen, setSearchIsOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
@@ -26,7 +25,6 @@ const NavigationMobile = () => {
   const [wishListCount, setWishListCount] = useState(0);
   const [categories, setCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-  const pathname = usePathname();
   useEffect(() => {
     const getCategories = async () => {
       get("/categories/product/tree").then((response) => {
@@ -307,63 +305,55 @@ const NavigationMobile = () => {
         </div>
 
         <div className="flex flex-col mt-10 max-h-[464px] overflow-y-auto">
-          {categories?.map((item, index) => (
-            <>
-              {item.children ? (
-                <>
+          {categories.length > 0 &&
+            categories.map((item, index) => (
+              <div key={`category-${item.id}`}>
+                {item.children ? (
                   <div
-                    key={item.id + index}
                     className={`p-3 flex items-center justify-between ${
                       index % 2 === 0 ? "bg-croonus-3 text-white" : ""
                     }`}
                     onClick={() => handleCategoryClick(item.id)}
                   >
-                    <p key={item?.id} className="uppercase font-medium">
-                      {item.name}
-                    </p>
+                    <p className="uppercase font-medium">{item.name}</p>
                     {item.children ? (
-                      <i
-                        key={item?.id}
-                        className="fa-solid fa-chevron-right text-sm"
-                      ></i>
+                      <i className="fa-solid fa-chevron-right text-sm"></i>
                     ) : null}
                   </div>
-                </>
-              ) : (
-                <Link
-                  href={`/${item?.link?.link_path}`}
-                  className="uppercase font-medium"
-                  key={item?.id + index}
-                  onClick={() => setIsOpen(false)}
-                >
-                  <div
-                    key={item.id + index}
-                    className={`p-3 flex items-center justify-between ${
-                      index % 2 === 0 ? "bg-croonus-3 text-white" : ""
-                    }`}
+                ) : (
+                  <Link
+                    href={`/${item?.link?.link_path}`}
+                    className="uppercase font-medium"
+                    onClick={() => setIsOpen(false)}
                   >
-                    <p
-                      className="uppercase font-medium"
-                      onClick={() => setIsOpen(false)}
-                      key={item?.id}
+                    <div
+                      className={`p-3 flex items-center justify-between ${
+                        index % 2 === 0 ? "bg-croonus-3 text-white" : ""
+                      }`}
                     >
-                      {item.name}
-                    </p>
-                    {item.children ? (
-                      <i
-                        key={item?.id + index}
-                        className="fa-solid fa-chevron-right text-sm"
-                      ></i>
-                    ) : null}
-                  </div>
-                </Link>
-              )}
+                      <p
+                        className="uppercase font-medium"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {item.name}
+                      </p>
+                      {item.children ? (
+                        <i
+                          key={"child-item" + index}
+                          className="fa-solid fa-chevron-right text-sm"
+                        ></i>
+                      ) : null}
+                    </div>
+                  </Link>
+                )}
 
-              {subcategory && item?.children
-                ? item?.children?.map((child) => {
+                {subcategory &&
+                  item?.children &&
+                  item?.children?.map((child) => {
                     if (child.parent_id == selectedCategoryId) {
                       return (
                         <Link
+                          key={`child-${child.id}`}
                           href={`/${child?.link?.link_path}`}
                           onClick={() => {
                             setIsOpen(false);
@@ -374,16 +364,14 @@ const NavigationMobile = () => {
                               ? `p-3 pl-10 translate-x-0 duration-500 transition-all uppercase font-medium text-sm`
                               : `p-3 pl-10 =translate-x-full duration-500 transition-all uppercase font-medium text-sm`
                           }
-                          key={child?.id}
                         >
                           {child?.name}
                         </Link>
                       );
                     }
-                  })
-                : null}
-            </>
-          ))}
+                  })}
+              </div>
+            ))}
         </div>
         <div className="flex mt-auto flex-col gap-4 p-3 text-white bg-croonus-3">
           <a

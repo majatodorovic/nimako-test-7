@@ -52,7 +52,7 @@ const ProductGallery = ({ gallery }) => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [modal]);
 
-  // ✅ BLOKIRANJE SCROLLA KADA JE MODAL AKTIVAN
+  //  BLOKIRANJE SCROLLA KADA JE MODAL AKTIVAN
   useEffect(() => {
     if (modal) {
       const scrollY = window.scrollY;

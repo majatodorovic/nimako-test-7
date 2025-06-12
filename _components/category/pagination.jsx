@@ -39,7 +39,7 @@ export const Pagination = ({
         pagination?.selected_page,
         pagination?.total_pages
       ).map((num, index, array) => (
-        <>
+        <div key={index}>
           {index === 0 && num !== 1 && (
             <>
               <Link
@@ -103,7 +103,7 @@ export const Pagination = ({
               </Link>
             </>
           )}
-        </>
+        </div>
       ))}
     </div>
   );

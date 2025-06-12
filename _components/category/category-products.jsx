@@ -72,7 +72,7 @@ export const CategoryProducts = ({
       page_tmp > 1 ? `strana=${page_tmp}` : ""
     }`;
 
-    router.push(queryString, { scroll: false });
+    // router.push(queryString, { scroll: false });
     return queryString;
   };
 
@@ -83,7 +83,8 @@ export const CategoryProducts = ({
       page
     );
 
-    generateQueryString(sort_tmp, filters_tmp, page_tmp);
+    const query_string = generateQueryString(sort_tmp, filters_tmp, page_tmp);
+    router.push(query_string, { scroll: false });
   }, [sort, selectedFilters, page]);
 
   //dobijamo proizvode za kategoriju sa api-ja
@@ -98,7 +99,6 @@ export const CategoryProducts = ({
     render: false,
     section: section,
   });
-
   const mutateFilters = useCategoryFilters({
     slug,
     page,
@@ -133,21 +133,6 @@ export const CategoryProducts = ({
       section: section,
     });
   }, [tempSelectedFilters?.length]);
-
-  const renderedItems = useMemo(() => {
-    return data?.items?.map(({ id }) => (
-      <Suspense
-        key={id}
-        fallback={
-          <div
-            className={`col-span-1 w-full min-w-0 h-full aspect-2/3 bg-slate-300 animate-pulse`}
-          ></div>
-        }
-      >
-        <Thumb id={id} refetchWishlist={() => {}} categoryId={slug} />
-      </Suspense>
-    ));
-  }, [data?.items]);
 
   const getPaginationArray = (selectedPage, totalPages) => {
     const start = Math.max(1, selectedPage - 2);
@@ -256,7 +241,7 @@ export const CategoryProducts = ({
         <div className="max-md:col-span-4 col-span-3">
           <div className="mx-[0.4rem] md:mx-[4rem] mt-[4.125rem]">
             <div className="grid grid-cols-2 gap-y-[40px] lg:grid-cols-3 3xl:grid-cols-4 gap-x-[20px]">
-              {renderedItems}
+              {renderedItems(data, slug)}
             </div>
           </div>
         </div>
@@ -280,4 +265,19 @@ export const CategoryProducts = ({
       <CategoryLongDescription slug={slug} />
     </>
   );
+};
+
+const renderedItems = (data, slug) => {
+  return data?.items?.map(({ id }) => (
+    <Suspense
+      key={id}
+      fallback={
+        <div
+          className={`col-span-1 w-full min-w-0 h-full aspect-2/3 bg-slate-300 animate-pulse`}
+        ></div>
+      }
+    >
+      <Thumb id={id} refetchWishlist={() => {}} categoryId={slug} />
+    </Suspense>
+  ));
 };
